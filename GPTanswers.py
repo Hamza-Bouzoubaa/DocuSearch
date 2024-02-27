@@ -10,7 +10,7 @@ from PineconeRAG import SearchInPineconeIndex
 
 # Get the API keys from environment variables
 PINECONE_API_KEY = os.environ['PINECONE_API_KEY']
-AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_KEY']
+AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_API_KEY']
 
 
 model = AzureChatOpenAI(
@@ -56,7 +56,7 @@ def AskRAGQuestion():
 
     while True:
         message = input("Enter your message: ")
-        res = SearchInPineconeIndex(PINECONE_API_KEY,OPENAI_KEY,"uottawaprospectus",message)
+        res = SearchInPineconeIndex(PINECONE_API_KEY,AZURE_OPENAI_KEY,"uottawaprospectus",message)
         
         
         #Data = QuerySimilaritySearch(message,documentEmbeddings)

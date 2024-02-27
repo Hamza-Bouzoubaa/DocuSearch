@@ -25,7 +25,7 @@ def save_uploaded_file(directory: str, file):
   
 # Get the API keys from environment variables    
 PINECONE_API_KEY = os.environ['PINECONE_API_KEY']   
-AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_KEY'] 
+AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_API_KEY'] 
 MicrosoftEntraPass = os.environ['MICROSOFT_ENTRA_PASSWORD']
   
 

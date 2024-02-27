@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 
 # Get the API keys from environment variables
 PINECONE_API_KEY = os.environ['PINECONE_API_KEY']
-AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_KEY']
+AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_API_KEY']
 
  
   

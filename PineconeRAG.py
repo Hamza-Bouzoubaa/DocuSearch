@@ -10,12 +10,11 @@ from pinecone import Pinecone, PodSpec
 from tqdm import tqdm 
 from dotenv import load_dotenv
 
-# Load API keys from .env file
-load_dotenv('.env')
+
 
 # Get the API keys from environment variables
-PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
-OPENAI_KEY = os.getenv('OPENAI_API_KEY')
+PINECONE_API_KEY = os.environ['PINECONE_API_KEY']
+AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_KEY']
 
  
   

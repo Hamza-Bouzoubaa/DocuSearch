@@ -7,11 +7,9 @@ import ast
 from dotenv import load_dotenv  
 import os   
   
-# Load API keys from .env file  
-load_dotenv('.env')  
   
 # Get the API keys from environment variables  
-MicrosoftEntraPass = os.getenv('MICROSOFT_ENTRA_PASSWORD')
+MicrosoftEntraPass = os.environ['MICROSOFT_ENTRA_PASSWORD']
 
 
 def ConnectToAzureSQL(MicrosoftEntraPass):

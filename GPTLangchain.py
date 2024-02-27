@@ -6,8 +6,9 @@ from langchain import PromptTemplate
 from langchain.chains import LLMChain
 
 
-os.environ["AZURE_OPENAI_ENDPOINT"] = "https://hamzaopenai.openai.azure.com/"
-os.environ["AZURE_OPENAI_API_KEY"] = "dd51e19fe6d04f3b937fe53da56b60f1"
+
+AZURE_OPENAI_ENDPOINT = os.environ["AZURE_OPENAI_ENDPOINT"]
+AZURE_OPEN_API_KEY =  os.environ["AZURE_OPENAI_API_KEY"]
 
 model = AzureChatOpenAI(
     openai_api_version="2023-05-15",

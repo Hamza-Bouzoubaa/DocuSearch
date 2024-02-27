@@ -8,11 +8,12 @@ from docx import Document
 
 import os
 
-## setting up AzureOpenAI
-os.environ["openai_api_type"] = "azure"
-os.environ["AZURE_OPENAI_ENDPOINT"] = "https://hamzaopenai.openai.azure.com/"
-os.environ["openai_api_version"]  = "2023-07-01-preview"
-os.environ["openai_api_key"] = "dd51e19fe6d04f3b937fe53da56b60f1"
+
+
+AZURE_OPENAI_ENDPOINT = os.environ["AZURE_OPENAI_ENDPOINT"]
+AZURE_OPEN_API_KEY =  os.environ["AZURE_OPENAI_API_KEY"]
+
+
 
 
 def ReadFile(FilePath):

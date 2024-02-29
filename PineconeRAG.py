@@ -9,6 +9,7 @@ from time import sleep
 from pinecone import Pinecone, PodSpec
 from tqdm import tqdm 
 from dotenv import load_dotenv
+from io import BytesIO  
 
 
 
@@ -21,7 +22,7 @@ AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_API_KEY']
 def PagePDFExtracter(pdf_file_path):  
     from PyPDF2 import PdfReader  
   
-    reader = PdfReader(pdf_file_path)  
+    reader = PdfReader(BytesIO(pdf_file_path.read()))  
     number_of_pages = len(reader.pages)  
   
     doc = {}  
@@ -143,8 +144,6 @@ def FillPod(PineconeAPIKey,OpenAIKey,IndexName,PDFDoc,User):
         from langchain.text_splitter import RecursiveCharacterTextSplitter
 
         pc = Pinecone(api_key=PineconeAPIKey)
-
-        
         Doc = PagePDFExtracter(PDFDoc)
         
         embeddings =  AzureOpenAIEmbeddings(openai_api_key = OpenAIKey)  # Generating embeddings
@@ -157,7 +156,7 @@ def FillPod(PineconeAPIKey,OpenAIKey,IndexName,PDFDoc,User):
         progress_bar = st.sidebar.progress(0)  
         progress_text = st.sidebar.empty() 
         for doc in Doc:
-            index.upsert(vectors=[{"id": str(k)+str(PDFDoc),"values": DocumentVector[k],"metadata":{"text":(Doc[doc]["text"]),"page":int(Doc[doc]["page"]), "user":User,"document":PDFDoc}}],namespace= User)
+            index.upsert(vectors=[{"id": str(k)+str(PDFDoc),"values": DocumentVector[k],"metadata":{"text":(Doc[doc]["text"]),"page":int(Doc[doc]["page"]), "user":User,"document":PDFDoc.name}}],namespace= User)
             k+=1
             progress_bar.progress((k)/len(Doc))  # update progress bar  
             progress_text.text(f"Vectorizing Data: {((k)/len(Doc))*100:.2f}%")  

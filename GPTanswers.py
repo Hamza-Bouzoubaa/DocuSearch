@@ -13,10 +13,7 @@ PINECONE_API_KEY = os.environ['PINECONE_API_KEY']
 AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_API_KEY']
 
 
-model = AzureChatOpenAI(
-    openai_api_version="2023-05-15",
-    azure_deployment="HamzaGPT4",
-)
+
 
 Template = """  
     You are a world-class AI assistant. Your role is to provide precise and concise answers to queries using the sources provided. Your answers should be based on the information available in the sources, and you should avoid making unsupported assumptions. You should strive to present your answers in an easy-to-understand format, using bullet points when appropriate. When a direct answer is not available in the sources, you may infer the best possible response using the methodology or logic evident in the sources. Always remember to cite the page number where you found the information in APA format.   
@@ -36,18 +33,35 @@ Template = """
 
 
 
-prompt = PromptTemplate(  
+
+
+
+def generate_response(message,history,DataInfo,GPTVersion):
+
+
+    if GPTVersion :
+        model = AzureChatOpenAI(
+        openai_api_version="2023-05-15",
+        azure_deployment="HamzaGPT4",
+        )
+    else:
+        model = AzureChatOpenAI(
+        openai_api_version="2023-05-15",
+        azure_deployment="gpt-35-turbo-16k",
+        )
+    
+
+    prompt = PromptTemplate(  
     input_variables=["question","chathistory","DataInfo"],  
     template=Template  
-)  
+    )  
 
-chain = LLMChain(llm=model, prompt=prompt)
+    chain = LLMChain(llm=model, prompt=prompt)
 
-history = []  
-history_limit = 20
+    history = []  
+    history_limit = 20
+    
 
-
-def generate_response(message,history,DataInfo):
     response = chain.run(question = message,chathistory = history,DataInfo=DataInfo)
     return response
 

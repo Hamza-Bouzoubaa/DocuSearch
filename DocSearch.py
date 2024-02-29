@@ -2,13 +2,18 @@ import streamlit as st
 from GPTanswers import generate_response  
 from PineconeRAG import PagePDFExtracter,CreatePod,FillPod,SearchInPineconeIndex  
 from AzureSQL import ConnectToAzureSQL,AuthenticateUser,AddaUser
-from dotenv import load_dotenv  
+from AzureBlobStorage import save_file_in_blob_azure
 import os   
   
 # Get the API keys from environment variables  
 PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')  
 OPENAI_KEY = os.getenv('OPENAI_API_KEY')  
 MicrosoftEntraPass = os.getenv('MICROSOFT_ENTRA_PASSWORD')
+AZURE_BLOB_KEY = os.getenv('AZURE_BLOB_KEY')
+AZURE_BLOB_URL = "https://docusearchstorage.blob.core.windows.net/docusearchfolder"
+
+
+
   
 def save_uploaded_file(directory: str, file):    
     """Save uploaded file to the specified directory and return the path."""    
@@ -23,10 +28,7 @@ def save_uploaded_file(directory: str, file):
   
 
   
-# Get the API keys from environment variables    
-PINECONE_API_KEY = os.environ['PINECONE_API_KEY']   
-AZURE_OPENAI_KEY = os.environ['AZURE_OPENAI_API_KEY'] 
-MicrosoftEntraPass = os.environ['MICROSOFT_ENTRA_PASSWORD']
+
   
 
 if 'logged_in' not in st.session_state:
@@ -34,7 +36,9 @@ if 'logged_in' not in st.session_state:
     st.session_state['user'] = None
 # Variable to hold login status  
 
-def main():        
+def main():   
+    
+     
     print(st.session_state["user"])
     cursor,conn = ConnectToAzureSQL(MicrosoftEntraPass)    
   
@@ -88,14 +92,17 @@ def main():
 
     
     if st.session_state["logged_in"] == True:    
+
+        GPTVersion = st.toggle('Activate GPT-4')          
         
         st.sidebar.title("Upload your PDF")        
         file = st.sidebar.file_uploader("Drop your file here", type=['pdf'])        
   
         if file is not None and st.sidebar.button('Submit File'):        
-            FilePath = save_uploaded_file('PDFs', file)        
+                   
             CreatePod(PINECONE_API_KEY,"docusearch")
-            FillPod(PINECONE_API_KEY,OPENAI_KEY,"docusearch",FilePath.split("/")[-1],str(st.session_state["user"]))
+            FillPod(PINECONE_API_KEY,OPENAI_KEY,"docusearch",file,str(st.session_state["user"]))
+            save_file_in_blob_azure(AZURE_BLOB_KEY , AZURE_BLOB_URL, "docusearchstorage", file)
             st.sidebar.success('File uploaded and processed successfully.')      
         st.header('Ask your document')        
         user_input = st.text_input('Type your question here...')      
@@ -103,7 +110,7 @@ def main():
         if st.button('Search'):        
             result = SearchInPineconeIndex(PINECONE_API_KEY,OPENAI_KEY,"docusearch",user_input,st.session_state["user"],7)    
             print(result)  
-            answer = generate_response(user_input," ",result)      
+            answer = generate_response(user_input," ",result,GPTVersion)      
             st.write(answer)        
         
 if __name__ == "__main__":        

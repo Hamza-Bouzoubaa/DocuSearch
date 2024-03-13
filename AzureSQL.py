@@ -89,6 +89,33 @@ def AuthenticateUser(username, password, cursor, conn):
     print("User not authenticated")  
     return False 
 
+def AddaFile(filename, UserID, cursor, conn):
+    cursor.execute("INSERT INTO Files (Filename, UserID) VALUES (?, ?)", ( filename, UserID))  
+    conn.commit()  
+    print("File added successfully")  
+
+def DeleteFile(filename, UserID, cursor, conn):
+    cursor.execute("DELETE FROM Files WHERE Filename = ? AND UserID = ?", (filename, UserID))  
+    conn.commit()  
+    print("File deleted successfully") 
+
+def GetFiles(UserID, cursor, conn):
+    cursor.execute("SELECT Filename FROM Files WHERE UserID = ?", (UserID,))  
+    rows = cursor.fetchall()  
+    rows = [row[0] for row in rows]
+    return rows
+
+def GetUserID(username, cursor, conn):
+    cursor.execute("SELECT ID FROM Users WHERE Username = ?", (username,))  
+    row = cursor.fetchone()  
+    if row is not None:  
+        return row[0]
+    return None
+
+#AddaFile("test2", 7, cursor, conn)
+#print(DeleteFile("test",7, cursor, conn))
+#print(GetFiles(10, cursor, conn))
+#print(GetUserID("admin", cursor, conn))
 #AddaUser("Hamza", "admin00",cursor, conn)
 #AuthenticateUser("Hamza", "admin00", cursor, conn)
 #print(hash_password("admin00"))

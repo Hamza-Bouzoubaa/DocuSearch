@@ -128,7 +128,7 @@ def main():
             #result = SearchInPineconeIndex(PINECONE_API_KEY,AZURE_OPENAI_KEY,"ustudy",user_input,"syllabus",7)    
             container = CreateDBandContainer("DocuSearchVectordb", "DocuSearchContainer1", "/UserID")  
 
-            result = SearchUserContainer(container,str(st.session_state["user_id"]),user_input,3)
+            result = SearchUserContainer(container,str(st.session_state["user_id"]),user_input,7)
             print(result)  
             answer = generate_response(user_input," ",result,GPTVersion)      
             st.write(answer)        
